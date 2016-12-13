@@ -7,19 +7,21 @@ import (
     "io/ioutil"
     "io"
     "github.com/gorilla/mux"
+    "github.com/suricats/startups-referential/models"
 )
 
-
+// IndexHandler handles requests to root api path (/)
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
     w.WriteHeader(http.StatusOK)
     fmt.Fprintln(w, "Welcome, I am here to serve features around startups")
 }
 
+// GetStartupsHandler handles GET requests to /startups
 func GetStartupsHandler(w http.ResponseWriter, r *http.Request) {
-    startups := Startups{
-        Startup{Name: "Dataiku"},
-        Startup{Name: "Dreamquark"},
+    startups := models.Startups{
+        models.Startup{Name: "Dataiku"},
+        models.Startup{Name: "Dreamquark"},
     }
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusOK)
@@ -29,10 +31,11 @@ func GetStartupsHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
+// GetStartupHandler handles GET requests to /startups/{id}
 func GetStartupHandler(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
-    startupId := vars["startupId"]
-    startup := Startup{Id: startupId, Name: "Dataiku"}
+    startupID := vars["startupId"]
+    startup := models.Startup{Id: startupID, Name: "Dataiku"}
     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
     w.WriteHeader(http.StatusOK)
 
@@ -41,8 +44,9 @@ func GetStartupHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
+// CreateStartupHandler handles POST requests to /startups
 func CreateStartupHandler(w http.ResponseWriter, r *http.Request) {
-    var startup Startup
+    var startup models.Startup
     body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
     if err != nil {
         panic(err)
@@ -51,16 +55,16 @@ func CreateStartupHandler(w http.ResponseWriter, r *http.Request) {
         panic(err)
     }
     if err := json.Unmarshal(body, &startup); err != nil {
-       w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-       w.WriteHeader(422) // unprocessable entity
+       w.WriteHeader(http.StatusUnprocessableEntity)
        if err := json.NewEncoder(w).Encode(err); err != nil {
            panic(err)
        }
    }
+   //should insert it into database and return created object
    s := startup
    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
    w.WriteHeader(http.StatusCreated)
    if err := json.NewEncoder(w).Encode(s); err != nil {
-     panic(err)
+        panic(err)
    }
 }

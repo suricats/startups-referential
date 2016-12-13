@@ -5,6 +5,7 @@ import (
     "log"
     "net/http"
     "fmt"
+    "github.com/suricats/startups-referential/config"
 )
 
 func main() {
@@ -12,8 +13,8 @@ func main() {
     flag.StringVar(&configArg, "config", "", "toml configuration file")
     flag.Parse()
 
-    config := ReadConfig(configArg)
-    fmt.Printf("%+v", config)
+    configuration := config.ReadConfig(configArg)
+    fmt.Printf("%+v", configuration)
     router := NewRouter()
     log.Fatal(http.ListenAndServe(":8080", router))
 }

@@ -4,6 +4,7 @@ import (
     "net/http"
 )
 
+// Route defines a REST endpint
 type Route struct {
     Name        string
     Method      string
@@ -11,6 +12,7 @@ type Route struct {
     HandlerFunc http.HandlerFunc
 }
 
+// Routes defines a REST routes set
 type Routes []Route
 
 var routes = Routes{
