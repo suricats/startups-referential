@@ -11,10 +11,11 @@ type DatabaseConfig struct {
     Password string
     Host string
     Port int
+    Database string
 }
 
 type Configuration struct {
-    DatabaseConfig DatabaseConfig `toml:"database"`
+    Database DatabaseConfig `toml:"database"`
 }
 
 func ReadConfig(configfile string) Configuration {

@@ -1,11 +1,8 @@
 package models
 
-import "time"
-
 type Startup struct {
-    Id          string    `json:"id"`
-    Name        string    `json:"name"`
-    LastContact time.Time `json:"last_contact"`
+    Id          string    `db:"id" json:"id"`
+    Name        string    `db:"name" json:"name"`
 }
 
 type Startups []Startup

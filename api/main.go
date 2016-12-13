@@ -1,11 +1,11 @@
 package main
 
 import (
+    "github.com/suricats/startups-referential/config"
+    "github.com/suricats/startups-referential/db"
     "flag"
     "log"
     "net/http"
-    "fmt"
-    "github.com/suricats/startups-referential/config"
 )
 
 func main() {
@@ -14,7 +14,10 @@ func main() {
     flag.Parse()
 
     configuration := config.ReadConfig(configArg)
-    fmt.Printf("%+v", configuration)
+    connection := db.GetConnection(configuration)
+    defer connection.Close()
+    db.ListStartups(configuration, connection)
+
     router := NewRouter()
     log.Fatal(http.ListenAndServe(":8080", router))
 }
